@@ -1,0 +1,8 @@
+venv/
+venv
+venv*
+radioweb/node_modules/
+radioweb/dist/
+radioweb/build/
+radioweb/.env
+radioweb/.env.local

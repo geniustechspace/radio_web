@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags %}
+
+{% block title %}Articles{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto py-10 px-4">
+  <h1 class="text-3xl md:text-4xl font-bold mb-10 text-gray-900 dark:text-gray text-center">
+    📚 Latest Articles
+  </h1>
+
+  <div class="grid gap-8 md:grid-cols-2">
+    {% for article in articles %}
+      <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-6 shadow hover:shadow-lg transition duration-300 ease-in-out">
+        <a href="{% url 'article_detail' article.id %}">
+          <h2 class="text-2xl font-semibold text-blue-600 hover:underline">
+            {{ article.title }}
+          </h2>
+        </a>
+        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+          By {{ article.author }} • {{ article.date_published }}
+        </p>
+
+        <div class="prose dark:prose-invert mt-4 text-gray-700 dark:text-gray-200 max-h-40 overflow-hidden">
+          {% for block in article.body %}
+            {% if block.block_type == 'paragraph' %}
+              <p>{{ block.value|richtext|truncatechars:200 }}</p>
+            {% endif %}
+          {% endfor %}
+        </div>
+
+        <div class="mt-4 flex items-center justify-between">
+          <a href="{% url 'article_detail' article.id %}" class="text-blue-500 text-sm hover:underline">
+            Read full article →
+          </a>
+          {% if article.is_sponsored %}
+            <span class="text-xs font-semibold bg-yellow-400 text-white px-2 py-1 rounded">
+              Sponsored
+            </span>
+          {% endif %}
+        </div>
+      </div>
+    {% empty %}
+      <p class="text-center text-gray-500 dark:text-gray-400">No articles found.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

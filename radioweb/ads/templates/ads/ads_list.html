@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load static wagtailimages_tags %}
+{% block title %}Advertisements{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+  <h1 class="text-4xl font-bold text-center text-gray-900 dark:text-gray-100 mb-10">Advertisements</h1>
+
+  {% if ads %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      {% for ad in ads %}
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow hover:shadow-lg transition duration-300 overflow-hidden">
+          <a href="{% url 'ad_detail' ad.pk %}" class="block">
+
+            {% if ad.ad_type == 'banner' and ad.image %}
+              {% image ad.image fill-600x300 as img %}
+              <img src="{{ img.url }}" alt="{{ ad.title }}" class="w-full h-48 object-cover" />
+            {% endif %}
+
+            <div class="p-5">
+              <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-2 truncate">
+                {{ ad.title }}
+              </h2>
+
+              <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                Type: {{ ad.get_ad_type_display }}
+              </p>
+
+              {% if ad.caption %}
+                <p class="text-sm text-gray-700 dark:text-gray-300 mb-3 line-clamp-3">
+                  {{ ad.caption|striptags }}
+                </p>
+              {% endif %}
+
+              <span class="inline-block text-sm text-blue-600 dark:text-blue-400 hover:underline">
+                🔗 View Ad Details
+              </span>
+            </div>
+          </a>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-center text-gray-500 dark:text-gray-400 mt-10">No advertisements found.</p>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,113 @@
+{% block content %}
+
+<!-- Listen Live -->
+<div class="flex items-center justify-between bg-white p-4 rounded-lg shadow-md mb-6">
+  <div>
+    <h1 class="text-2xl font-bold text-gray-800">🎧 Listen Live</h1>
+    <p class="text-sm text-gray-500">Tune in to the live broadcast</p>
+  </div>
+  <div class="flex items-center space-x-4">
+    <audio id="liveAudio" src="https://stream.zeno.fm/2kbugam6t18uv" preload="none"></audio>
+    <button id="playPauseBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full">
+      ▶️ Play
+    </button>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-9 gap-6 mb-10">
+
+  <!-- Total Programs -->
+  <div class="lg:col-span-3 bg-gray-800 bg-blue-600 text-white rounded-lg p-6 shadow-md">
+    <h3 class="text-xl font-semibold mb-2">Total Programs</h3>
+    <p class="text-4xl font-bold">{{ program_count }}</p>
+    <p class="text-sm">Programs currently scheduled</p>
+  </div>
+
+  <!-- Program Schedule Summary (span 6 of 9) -->
+  <div class="lg:col-span-6 bg-purple-700 text-white rounded-lg p-6 shadow-md">
+    <h3 class="text-xl font-semibold mb-4">Program Schedule Summary</h3>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm table-auto">
+        <thead>
+          <tr class="text-left text-purple-100">
+            <th class="px-4 py-2">Title</th>
+            <th class="px-4 py-2">Time</th>
+            <th class="px-4 py-2">Day</th>
+          </tr>
+        </thead>
+        <tbody class="text-white">
+          {% for program in programs %}
+          <tr class="border-t border-purple-600">
+            <td class="px-4 py-2">{{ program.title }}</td>
+            <td class="px-4 py-2">{{ program.start_time }} - {{ program.end_time }}</td>
+            <td class="px-4 py-2">{{ program.day_of_week }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- Dashboard Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+
+  <!-- Recent Activities (span 3 of 9) -->
+  <div class="bg-gray-600 text-white rounded-lg p-6 shadow-md">
+    <h3 class="text-xl font-semibold mb-4">Recent Activities</h3>
+    <ul class="space-y-2 text-sm text-gray-300">
+      {% for activity in recent_activities %}
+      <li>{{ activity.message }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <!-- podcast -->
+  <div class="bg-green-600 text-white rounded-lg p-6 shadow-md">
+    <h3 class="text-xl font-semibold mb-2">Podcasts</h3>
+    <p class="text-4xl font-bold">{{ podcast_count }}</p>
+    <p class="text-sm">Tune in to inspiring stories and thought-provoking conversations.</p>
+  </div>
+
+
+  <!-- Upcoming Program -->
+  <div class="bg-yellow-500 text-white rounded-lg p-6 shadow-md">
+    <h3 class="text-xl font-semibold mb-2">Upcoming Program</h3>
+    {% if upcoming_program %}
+    <p class="text-2xl font-bold">{{ upcoming_program.title }}</p>
+    <p class="text-sm">Starts at {{ upcoming_program.start_time }}</p>
+    {% else %}
+    <p class="text-sm">No more programs today</p>
+    {% endif %}
+  </div>
+
+</div>
+
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  const audio = document.getElementById('liveAudio');
+  const playPauseBtn = document.getElementById('playPauseBtn');
+  let isPlaying = false;
+
+  playPauseBtn.addEventListener('click', async () => {
+    try {
+      if (!isPlaying) {
+        await audio.play();
+        playPauseBtn.textContent = '⏸️ Pause';
+        isPlaying = true;
+      } else {
+        audio.pause();
+        playPauseBtn.textContent = '▶️ Play';
+        isPlaying = false;
+      }
+    } catch (err) {
+      console.error("Audio play error:", err);
+      alert("Unable to play audio.");
+    }
+  });
+</script>
+{% endblock %}

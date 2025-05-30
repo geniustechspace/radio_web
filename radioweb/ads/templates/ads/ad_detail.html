@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% load static wagtailimages_tags %}
+{% block title %}{{ ad.title }}{% endblock %}
+
+{% block content %}
+<div
+  class="max-w-3xl mx-auto py-12 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-900 rounded-lg shadow border border-gray-200 dark:border-gray-700">
+
+  <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6">{{ ad.title }}</h1>
+
+  {% if ad.ad_type == 'banner' and ad.images.all %}
+  <!-- Swiper -->
+  <div class="swiper mySwiper mb-6 relative">
+    <div class="swiper-wrapper">
+      {% for image in ad.images.all %}
+      {% image image.image fill-800x400 as img %}
+      <div class="swiper-slide relative">
+        <img src="{{ img.url }}" alt="{{ image.alt_text }}" class="w-full h-64 object-cover rounded" />
+        {% if image.alt_text %}
+        <div
+          class="caption absolute bottom-5 left-5 text-white text-center text-lg font-semibold bg-black bg-opacity-50 px-3 py-1 rounded opacity-0 transform translate-y-5 transition-all duration-500">
+          {{ image.alt_text }}
+        </div>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    <div class="swiper-pagination"></div>
+
+    <!-- Navigation -->
+    <div class="swiper-button-next"></div>
+    <div class="swiper-button-prev"></div>
+  </div>
+  {% endif %}
+
+  {% if ad.ad_type == 'audio' and ad.audio_file %}
+  <div class="mb-6">
+    <audio controls class="w-full">
+      <source src="{{ ad.audio_file.url }}" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+  </div>
+  {% endif %}
+
+  <p class="text-gray-700 dark:text-gray-300 mb-4">
+    <strong>Type:</strong> {{ ad.get_ad_type_display }}
+  </p>
+
+  {% if ad.caption %}
+  <div class="prose dark:prose-invert mb-6 text-white text-center">
+    {{ ad.caption|safe }}
+  </div>
+  {% endif %}
+
+  <p class="mb-6">
+    <strong class="text-gray-900 dark:text-gray-100">Visit link:</strong>
+    <a href="{{ ad.target_url }}" target="_blank" rel="noopener" class="text-blue-600 hover:underline break-all">
+      {{ ad.target_url }}
+    </a>
+  </p>
+
+  <a href="{% url 'advertisements' %}" class="text-blue-600 hover:underline text-sm">
+    ← Back to Advertisements
+  </a>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const swiper = new Swiper('.mySwiper', {
+      loop: true,
+      slidesPerView: 1,
+      spaceBetween: 10,
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+      pagination: {
+        el: '.swiper-pagination',
+        clickable: true,
+      },
+      autoplay: {
+        delay: 3000,
+        disableOnInteraction: false,
+      },
+      on: {
+        slideChange: function () {
+          // Animate captions
+          document.querySelectorAll('.swiper-slide .caption').forEach(caption => {
+            caption.classList.remove('opacity-100', 'translate-y-0');
+            caption.classList.add('opacity-0', 'translate-y-5');
+          });
+          const activeSlide = this.slides[this.activeIndex];
+          const activeCaption = activeSlide.querySelector('.caption');
+          if (activeCaption) {
+            activeCaption.classList.remove('opacity-0', 'translate-y-5');
+            activeCaption.classList.add('opacity-100', 'translate-y-0');
+          }
+        }
+      }
+    });
+
+    const swiperEl = document.querySelector('.mySwiper');
+    swiperEl.addEventListener('mouseenter', () => swiper.autoplay.stop());
+    swiperEl.addEventListener('mouseleave', () => swiper.autoplay.start());
+
+    // Trigger initial caption animation
+    swiper.emit('slideChange');
+  });
+</script>
+
+<style>
+  .caption {
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+
+  .opacity-0 {
+    opacity: 0 !important;
+  }
+
+  .opacity-100 {
+    opacity: 1 !important;
+  }
+
+  .translate-y-0 {
+    transform: translateY(0) !important;
+  }
+
+  .translate-y-5 {
+    transform: translateY(1.25rem) !important;
+    /* 5 * 0.25rem */
+  }
+</style>
+{% endblock %}

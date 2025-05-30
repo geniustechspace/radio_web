@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Podcasts{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold text-gray-900 dark:text-gray mb-6">🎧 Latest Podcast Episodes</h1>
+
+  {% for podcast in podcasts %}
+    <div class="mb-8 p-6 bg-white dark:bg-gray-900 rounded-lg shadow">
+      <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-2">
+        {{ podcast.title }}
+      </h2>
+      <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">Published on {{ podcast.publish_date }}</p>
+      <div class="prose dark:prose-invert max-w-none mb-4 text-white">
+        {{ podcast.summary|striptags }}
+      </div>
+
+      {% if podcast.audio_file %}
+        <audio controls class="w-full mt-2">
+          <source src="{{ podcast.audio_file.url }}" type="audio/mpeg">
+          Your browser does not support the audio element.
+        </audio>
+      {% else %}
+        <p class="text-red-500">Audio file not available.</p>
+      {% endif %}
+    </div>
+  {% empty %}
+    <p class="text-center text-gray-600 dark:text-gray-400">No podcast episodes available yet.</p>
+  {% endfor %}
+</div>
+{% endblock %}

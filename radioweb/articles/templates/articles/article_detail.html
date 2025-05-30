@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags %}
+
+{% block title %}{{ page.title }}{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+  <article class="bg-white dark:bg-gray-900 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700">
+    
+    <header class="mb-6">
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">{{ page.title }}</h1>
+      <p class="text-sm text-gray-600 dark:text-white mt-2">
+        By {{ page.author }} • {{ page.date_published }}
+      </p>
+      {% if page.is_sponsored %}
+        <span class="inline-block mt-2 text-xs font-medium bg-yellow-400 text-white px-2 py-1 rounded">
+          Sponsored
+        </span>
+      {% endif %}
+    </header>
+
+  <div class="prose prose-invert max-w-none text-white">
+    {% for block in page.body %}
+      {% if block.block_type == "paragraph" %}
+        <div class="text-white">{{ block.value|richtext }}</div>
+      {% elif block.block_type == "image" %}
+        <div class="my-6">
+          <img src="{{ block.value.url }}" alt="{{ block.value.title }}" class="rounded shadow" />
+        </div>
+      {% elif block.block_type == "link" %}
+        <p>
+          <a href="{{ block.value.url }}" class="text-blue-400 hover:underline font-medium" target="_blank" rel="noopener">
+            🔗 {{ block.value.text }}
+          </a>
+        </p>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+
+    <div class="mt-10">
+      <a href="{% url 'articles' %}" class="text-blue-600 hover:underline text-sm">
+        ← Back to Articles
+      </a>
+    </div>
+  </article>
+</div>
+{% endblock %}

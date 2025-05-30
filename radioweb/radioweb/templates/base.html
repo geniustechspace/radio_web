@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Radio Broadcast{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Swiper CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+</head>
+
+<body class="bg-gray-100 min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="bg-white shadow-md p-4 flex justify-between items-center">
+    <h1 class="text-xl font-semibold">Radio Broadcast</h1>
+    <nav class="space-x-4 hidden md:flex">
+      <a href="{% url 'home' %}" class="text-gray-700 hover:text-blue-600">Home</a>
+      <a href="{% url 'program_schedule' %}" class="text-gray-700 hover:text-blue-600">Program Schedules</a>
+      <a href="{% url 'podcasts' %}" class="text-gray-700 hover:text-blue-600">Podcasts</a>
+      <a href="{% url 'articles' %}" class="text-gray-700 hover:text-blue-600">Articles</a>
+      <a href="{% url 'advertisements' %}" class="text-gray-700 hover:text-blue-600">Advertisements</a>
+    </nav>
+    <!-- Mobile menu button -->
+    <div class="md:hidden">
+      <button id="menuBtn" class="text-gray-700 focus:outline-none">
+        ☰
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile Menu -->
+  <div id="mobileMenu" class="md:hidden hidden bg-white shadow-md px-4 py-2 space-y-2">
+    <a href="{% url 'home' %}" class="block text-gray-700 hover:text-blue-600">Home</a>
+    <a href="{% url 'program_schedule' %}" class="block text-gray-700 hover:text-blue-600">Program Schedules</a>
+    <a href="{% url 'podcasts' %}" class="block text-gray-700 hover:text-blue-600">Podcasts</a>
+    <a href="{% url 'articles' %}" class="block text-gray-700 hover:text-blue-600">Articles</a>
+    <a href="{% url 'advertisements' %}" class="block text-gray-700 hover:text-blue-600">Advertisements</a>
+  </div>
+
+  <!-- Main Content -->
+  <main class="flex-1 p-6">
+    {% block content %}
+    <!-- Default content if not overridden -->
+    <h2 class="text-2xl font-bold mb-4">Welcome to the Radio Broadcast Home</h2>
+    <p class="text-gray-600">Use the menu to manage content.</p>
+    {% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white text-center py-4 text-sm text-gray-500">
+    &copy; 2025 Radio Station. All rights reserved.
+  </footer>
+
+  <!-- Script to toggle mobile menu -->
+  <script>
+    document.getElementById('menuBtn').addEventListener('click', () => {
+      const menu = document.getElementById('mobileMenu');
+      menu.classList.toggle('hidden');
+    });
+  </script>
+  {% block extra_js %}
+
+  {% endblock extra_js %}
+</body>
+
+</html>

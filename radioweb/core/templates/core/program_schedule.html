@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Program Schedules{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold mb-4 text-gray-800 dark:text-gray">Program Schedules</h1>
+
+  <p class="mb-6 text-lg text-gray-700 dark:text-gray-800 leading-relaxed">
+    Welcome to our vibrant world of sound and storytelling! 🎙️<br>
+    Here, you'll find our full lineup of engaging radio programs, from early morning inspirations to late-night grooves.
+    Whether you're tuning in for music, talk shows, or news, our presenters are here to keep you informed, entertained, and inspired.
+    Check out what’s on and when below. Don’t miss your favorite show!
+  </p>
+
+  <div class="overflow-x-auto bg-white dark:bg-gray-900 shadow-lg rounded-lg">
+    <table class="min-w-full text-sm table-auto">
+      <thead class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 uppercase text-xs tracking-wider">
+        <tr>
+          <th class="px-6 py-4 text-left">Title</th>
+          <th class="px-6 py-4 text-left">Presenter</th>
+          <th class="px-6 py-4 text-left">Day</th>
+          <th class="px-6 py-4 text-left">Start Time</th>
+          <th class="px-6 py-4 text-left">End Time</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100 dark:divide-gray-800 text-gray-800 dark:text-gray-100">
+        {% for program in programs %}
+        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800">
+          <td class="px-6 py-4 font-medium">{{ program.title }}</td>
+          <td class="px-6 py-4">{{ program.presenter }}</td>
+          <td class="px-6 py-4">{{ program.day_of_week }}</td>
+          <td class="px-6 py-4">{{ program.start_time|time:"g:i A" }}</td>
+          <td class="px-6 py-4">{{ program.end_time|time:"g:i A" }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5" class="px-6 py-6 text-center text-gray-500 dark:text-gray-400">
+            No scheduled programs.
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
